@@ -6,19 +6,25 @@ use simplerest\core\api\v1\ResourceController;
 use simplerest\core\Request;
 use simplerest\libs\Factory;
 use simplerest\libs\DB;
-use simplerest\models\RolesModel;
+use simplerest\libs\Debug;
 
-class DownloadController extends ResourceController
+class FilesController extends ResourceController
 {
     // caso puntual donde lo conservo:
     static protected $guest_access = true;
 
     function __construct()
     {
-        parent::__construct();        
+        parent::__construct();   
+        
+        $this->tenantid = Factory::request()->getTenantId();
+
+        if ($this->tenantid !== null){
+            $this->conn = DB::getConnection($this->tenantid);
+        }
     }
 
-    function get($id = null) {
+    function download($id = null) {
         if (!in_array($_SERVER['REQUEST_METHOD'], ['GET','OPTIONS']))
             Factory::response()->sendError('Incorrect verb ('.$_SERVER['REQUEST_METHOD'].'), expecting GET',405);
 
@@ -26,6 +32,16 @@ class DownloadController extends ResourceController
             return;
 
         $_get = [];    
+
+        
+        # Incluye tentant-id en el id?
+
+        if ($this->tenantid === null && strlen($id) > 36 && $id[36] == '-'){
+            $this->tenantid = substr($id, 37);
+            $id = substr($id,0,36);
+
+            $this->conn = DB::getConnection($this->tenantid);
+        }
         
         if (!Factory::acl()->hasSpecialPermission('read_all', $this->roles)){
             if ($this->acl->isGuest()){                
@@ -44,10 +60,15 @@ class DownloadController extends ResourceController
 
         $row = DB::table('files')->select(['filename_as_stored'])->where($_get)->first();
 
+
         if (empty($row))
             Factory::response()->sendError('File not found', 404);
       
-        $file = UPLOADS_PATH . $row['filename_as_stored'];
+        if ($this->tenantid !== null){
+            $sub = "{$this->tenantid}/";
+        }
+
+        $file = UPLOADS_PATH . $sub . $row['filename_as_stored'];
 
         if (file_exists($file)) {
             header('Content-Description: File Transfer');

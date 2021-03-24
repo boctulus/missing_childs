@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 22, 2021 at 09:50 PM
+-- Generation Time: Mar 24, 2021 at 03:00 PM
 -- Server version: 5.7.33-0ubuntu0.18.04.1
 -- PHP Version: 7.4.15
 
@@ -42,34 +42,6 @@ INSERT INTO `api_keys` (`uuid`, `value`, `user_id`, `created_at`) VALUES
 ('00000000000ffffffffffffff1', '0ZfTPJB3VeCAAkeB', 324, NULL),
 ('00000000000fffffffffffffff', '8ZfTPJB3VeCAAkea', 90, NULL),
 ('gtgg4g566556546', '0ZfTPJB3VeCAAkeC', 400, '2020-11-04 12:51:32');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `files`
---
-
-CREATE TABLE `files` (
-  `uuid` varchar(36) NOT NULL,
-  `filename` varchar(255) NOT NULL,
-  `file_ext` varchar(30) NOT NULL,
-  `filename_as_stored` varchar(60) NOT NULL,
-  `belongs_to` int(11) DEFAULT NULL,
-  `guest_access` tinyint(4) DEFAULT NULL,
-  `locked` tinyint(4) NOT NULL DEFAULT '0',
-  `broken` tinyint(4) DEFAULT NULL,
-  `created_at` datetime NOT NULL,
-  `deleted_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `files`
---
-
-INSERT INTO `files` (`uuid`, `filename`, `file_ext`, `filename_as_stored`, `belongs_to`, `guest_access`, `locked`, `broken`, `created_at`, `deleted_at`) VALUES
-('01a37256-3f00-400b-ad0d-01997829326f', 'LyA logo cuadrado.png', 'png', '6-6059341440f554.06055368.png', NULL, 0, 0, NULL, '2021-03-22 21:19:32', NULL),
-('d2aa0043-cb01-4806-b2ec-d212920920f1', 'TODO.jpg', 'jpg', '6-605938728ad933.37447374.jpg', NULL, 0, 0, NULL, '2021-03-22 21:38:10', NULL),
-('eaa4f092-6693-4ac8-828f-c7ed659b666e', 'cronos.png', 'png', '6-605934144122e8.15380455.png', NULL, 0, 0, NULL, '2021-03-22 21:19:32', NULL);
 
 -- --------------------------------------------------------
 
@@ -249,13 +221,6 @@ CREATE TABLE `user_tb_permissions` (
 ALTER TABLE `api_keys`
   ADD PRIMARY KEY (`uuid`),
   ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `files`
---
-ALTER TABLE `files`
-  ADD PRIMARY KEY (`uuid`),
-  ADD KEY `belongs_to` (`belongs_to`);
 
 --
 -- Indexes for table `folder_permissions`

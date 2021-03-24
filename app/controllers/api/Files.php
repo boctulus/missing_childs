@@ -14,13 +14,30 @@ class Files extends MyApiController
 
     function __construct()
     {   
-        parent::__construct();
+        parent::__construct();    
+        
+        $this->tenantid = Factory::request()->getTenantId();
+
+        if ($this->tenantid !== null){
+            $this->conn = DB::getConnection($this->tenantid);
+        }
     }
 
+    /*
+        Falta poder meter campos != files enviados en el request
+
+        Lo más fácil sería que se hiciera como update con PATCH
+    */
     function post() {
         $data = $_POST;
 
-        $uploader = (new MultipleUploader())
+        $uploader = new MultipleUploader();
+
+        if ($this->tenantid !== null){
+            $uploader->setLocation(UPLOADS_PATH . "{$this->tenantid}/");
+        }
+
+        $uploader
         ->setFileHandler(function($uid) {
             $prefix = ($uid ?? '0').'-';
             return uniqid($prefix, true);
@@ -58,7 +75,7 @@ class Files extends MyApiController
             $uploaded[] = [ 
                             'filename' => $filename_ori,
                             'uuid' => $id,
-                            'link' => '/download/get/' . $id
+                            'link' => '/files/download/' . $id
             ];
         }
   
@@ -123,10 +140,14 @@ class Files extends MyApiController
             $soft_delete = static::$soft_delete && $instance->inSchema(['deleted_at']);
 
             if (!$soft_delete) {
-                $path = UPLOADS_PATH . $row['filename_as_stored'];
+                if ($this->tenantid !== null){
+                    $sub = "{$this->tenantid}/";
+                }
+
+                $path = UPLOADS_PATH . $sub . $row['filename_as_stored'];
 
                 if (!file_exists($path)){
-                    $instance->update(['broken' => 1]);
+                    //$instance->update(['broken' => 1]);
                     Factory::response()->sendError("File not found",404, $path); 
                 }
 

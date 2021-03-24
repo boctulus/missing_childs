@@ -21,20 +21,23 @@ class FilesSchema implements ISchema
 			'filename' => 'STR',
 			'file_ext' => 'STR',
 			'filename_as_stored' => 'STR',
+			'entity' => 'STR',
+			'entity_id' => 'STR',
 			'belongs_to' => 'INT',
 			'guest_access' => 'INT',
 			'locked' => 'INT',
-			'broken' => 'INT',
 			'created_at' => 'STR',
 			'deleted_at' => 'STR'
 		],
 
-			'nullable'		=> ['uuid', 'belongs_to', 'guest_access', 'broken', 'deleted_at'],
+			'nullable'		=> ['uuid', 'belongs_to', 'guest_access', 'deleted_at'],
 
 			'rules' 		=> [
 				'filename' => ['max' => 255],
 				'file_ext' => ['max' => 30],
-				'filename_as_stored' => ['max' => 60]
+				'filename_as_stored' => ['max' => 60],
+				'entity' => ['max' => 40],
+				'entity_id' => ['max' => 36],
 			]
 		];
 	}	

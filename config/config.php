@@ -26,7 +26,7 @@ return [
 	'DEFAULT_CONTROLLER' => 'LoginController',
 
 	'db_connections' => [
-		'db_app' => [
+		'main' => [
 			'host'		=> env('DB_HOST', '127.0.0.1'),
 			'port'		=> env('DB_PORT', 3306),
 			'driver' 	=> env('DB_CONNECTION'),
@@ -40,7 +40,7 @@ return [
 			]
 		],
 		
-		'db_ar' => [
+		'ar' => [
 			'host'		=> env('DB_HOST_AR', '127.0.0.1'),
 			'port'		=> env('DB_PORT_AR', 3306),
 			'driver' 	=> env('DB_CONNECTION_AR'),
@@ -56,11 +56,11 @@ return [
 
 	], 
 
-	'db_connection_default' => 'db_app',  
+	'db_connection_default' => 'main',  
 	
 	'DateTimeZone' => 'America/Argentina/Buenos_Aires',
 
-	'error_handling'   => false,
+	'error_handling'   => true,
 	'debug'   => env('APP_DEBUG', true),
 
 	'access_token' => [
@@ -83,7 +83,7 @@ return [
 	/* 
 		Any role listed bellow if it is asked then will be auto-aproved.
 	*/
-	'auto_approval_roles' => ['dev', 'superadmin'],
+	'auto_approval_roles' => ['dev'],
 
 	/*
 		If you need email confirmation then pre_activated should be false
@@ -111,12 +111,12 @@ return [
 		]
 	],
 
-	'pretty' => false,	
+	'pretty' => true,	
 	
 	'paginator' => [
 					'max_limit' => 50,
 					'default_limit' => 10,
-					'position' => 'BOTTOM'
+					'position' => 'TOP'
 	],
 
 	'google_auth'  => [

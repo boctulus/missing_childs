@@ -52,6 +52,10 @@ class MultipleUploader
 		return $this;
 	}	
 
+	public function getLocation(){
+		return $this->location;
+	}	
+
 	/*
 		Renamer
 	*/
